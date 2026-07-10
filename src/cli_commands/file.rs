@@ -10,13 +10,9 @@ pub struct FileCommands {
 #[derive(Subcommand, Debug)]
 pub enum FileCommandsOptions {
     /// Creates a file to the given path.
-    Create {
-        path: PathBuf
-    },
+    Create { path: PathBuf },
     /// Deletes a file.
-    Delete {
-        path: PathBuf
-    },
+    Delete { path: PathBuf },
 
     /// Write contents inside the file.
     Write {
@@ -27,7 +23,5 @@ pub enum FileCommandsOptions {
         overwrite: bool,
     },
     /// Outputs the contents of the file in the terminal.
-    Read {
-        path: PathBuf,
-    },
+    Read { path: PathBuf, },
 }
