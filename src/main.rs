@@ -1,10 +1,12 @@
-pub mod models;
+mod cli;
+mod cli_commands;
 
-use models::MUCLI::{CLI, Commands};
-use models::file_commands::{FileCommandsOptions};
+use cli::*;
+use cli_commands::file::{FileCommandsOptions};
 
 use std::io::{self, Write};
 use std::fs;
+use std::path::PathBuf;
 use clap::Parser;
 
 fn main() {
@@ -33,7 +35,7 @@ fn main() {
 
         let args = std::iter::once("mucli")
                                     .chain(input.split_whitespace());
-        let result = match CLI::try_parse_from(args) {
+        let result: CLI = match CLI::try_parse_from(args) {
             Ok(val) => val,
             Err(err) => {
                 match err.kind() {
@@ -56,32 +58,30 @@ fn main() {
     }
 }
 
-/// Matches the given command to the function to execute internally to the function
+/// Matches the given command to the expected.
 /// #### Returns
-/// a `bool` flag that indicate wether or not to continue the main loop of the program
-/// Returned in case of error
+/// a `bool` flag that indicate wether or not to continue the main loop of the program.
+/// `true` -> if the program encounters an error.
+/// `false` -> if the program executes normally
 fn match_args_command(command: &Commands) -> bool {
     match command {
         Commands::File(f) => {
             match &f.file_commands {
                 FileCommandsOptions::Create { path } => {
-                    println!("not implemented yet");
+                    if !check_file_path(&path) {
+                        return true
+                    }
+                    match fs::write(&path, "") {
+                        Ok(_) => return false,
+                        Err(_) => return true
+                    }
                 },
                 FileCommandsOptions::Delete { path } => {
                     println!("not implemented yet");
                 },
                 FileCommandsOptions::Write { path, message, overwrite } => {
-                    match fs::exists(&path) {
-                        Ok(val) => {
-                            if !val {
-                                eprintln!("ERRORE: Non è stato possibile raggiungere il file!");
-                                return true
-                            }
-                        },
-                        Err(_) => {
-                            eprintln!("ERRORE: Non è stato possibile raggiungere il file!");
-                            return true
-                        }
+                    if !check_file_path(&path) {
+                        return true
                     }
 
                     if overwrite.clone() {
@@ -106,14 +106,18 @@ fn match_args_command(command: &Commands) -> bool {
                         match file.write_all(message.as_bytes()) {
                             Ok(_) => {},
                             Err(_) => {
-                                eprintln!("ERRORE: Errore rilevato durante la scritt    ura del file!");
+                                eprintln!("ERRORE: Errore rilevato durante la scrittura del file!");
                                 return true
                             }
                         }
                     }
                 },
                 FileCommandsOptions::Read { path } => {
-                    let contents = match fs::read_to_string(&path) {
+                    if !check_file_path(&path) {
+                        return true
+                    }
+
+                    match fs::read_to_string(&path) {
                         Ok(contents) => { println!("{}", contents) },
                         Err(err) => {
                             eprintln!("ERRORE: Errore durante la lettura del file!\n{}\n", err);
@@ -130,4 +134,19 @@ fn match_args_command(command: &Commands) -> bool {
         },
     }
     false
+}
+
+/// Checks if the `PathBuf` type given in input exists.
+/// ### Returns
+/// `true` if the path exists.
+fn check_file_path(path: &PathBuf) -> bool {
+    match fs::exists(&path) {
+        Ok(val) => {
+            val
+        },
+        Err(_) => {
+            eprintln!("ERRORE: Non è stato possibile raggiungere il file!");
+            false
+        }
+    }
 }
