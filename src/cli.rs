@@ -1,19 +1,27 @@
 use clap::{Parser, Subcommand};
-use crate::cli_commands::file::{FileCommands};
-use crate::cli_commands::system::{SystemCommands};
+use crate::cli_commands::{file, system, misc};
+use file::FileCommands;
+use system::SystemCommands;
+use misc::MiscCommands;
 
 #[derive(Parser, Debug)]
-#[command(version, about, long_about = None)]
+#[command(version, about)]
 pub struct CLI {
-    /// Command to execute
+    /// Command to execute.
     #[command(subcommand)]
-    pub command: Commands,
+    pub command: Option<Commands>,
+
+    /// Quits the program.
+    #[arg(short, long)]
+    pub quit: bool,
 }
 
 #[derive(Subcommand, Debug)]
 pub enum Commands {
-    /// Handles file related tasks
+    /// Handles file related tasks.
     File(FileCommands),
-    /// Handles system related tasks
+    /// Handles system related tasks.
     System(SystemCommands),
+    /// Handles miscellaneous tasks (weather info, etc.).
+    Misc(MiscCommands),
 }
