@@ -1,9 +1,10 @@
 mod cli;
 mod cli_commands;
 mod models;
+pub mod api;
 
-use models::commands_traits::CommandsActions;
 use cli::*;
+use models::commands_traits::CommandsActions;
 use std::io::{self, Write};
 use clap::Parser;
 
@@ -12,7 +13,13 @@ fn main() {
     println!("Enter '--help' for options.");
     loop {
         print!("mucli> ");
-        io::stdout().flush().expect("Failed to flush stdout");
+        match io::stdout().flush() {
+            Ok(_) => {  },
+            Err(_) => {
+                println!("Failed to flush stdout");
+                break
+            },
+        };
 
         let mut input: String = String::new();
         let input: &str = match io::stdin().read_line(&mut input) {
@@ -53,6 +60,10 @@ fn main() {
         }
 
         match &result.command {
+            Some(Commands::Clear {}) => {
+                todo!()
+            },
+
             Some(Commands::File(f)) => {
                 match f.run() {
                     Ok(_) => {},
@@ -61,7 +72,27 @@ fn main() {
                         continue
                     },
                 }
-            }
+            },
+
+            Some(Commands::Images(i)) => {
+                match i.run() {
+                    Ok(_) => {},
+                    Err(err) => {
+                        println!("Error: Found error: {}\n", err);
+                        continue
+                    },
+                }
+            },
+
+            Some(Commands::Player(p)) => {
+                match p.run() {
+                    Ok(_) => {},
+                    Err(err) => {
+                        println!("Error: Found error: {}\n", err);
+                        continue
+                    },
+                }
+            },
 
             Some(Commands::System(s)) => {
                 match s.run() {
@@ -71,7 +102,17 @@ fn main() {
                         continue
                     },
                 }
-            }
+            },
+
+            Some(Commands::Connection(c)) => {
+                match c.run() {
+                    Ok(_) => {},
+                    Err(err) => {
+                        println!("Error: Found error: {}\n", err);
+                        continue
+                    },
+                }
+            },
 
             Some(Commands::Misc(m)) => {
                 match m.run() {
@@ -81,7 +122,7 @@ fn main() {
                         continue
                     },
                 }
-            }
+            },
 
             None => {
                 println!("Error: Make sure to enter a valid command.");

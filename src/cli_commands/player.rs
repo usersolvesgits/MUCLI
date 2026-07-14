@@ -1,16 +1,15 @@
 use crate::models::commands_traits::CommandsActions;
 
-use clap::{Args};
+use clap::Args;
 use anyhow::Error;
 
 #[derive(Args, Debug)]
-pub struct SystemCommands {
+pub struct PlayerCommands {
     //TODO
-    // Run (opens an application (VS, Notepad, etc.))
-    // Configs (CPU, RAM, etc.)
+    // Play (plays an mp3, m4a, ... files)
 }
 
-impl CommandsActions for SystemCommands {
+impl CommandsActions for PlayerCommands {
     fn run(&self) -> Result<(), Error> {
         todo!()
     }
