@@ -74,8 +74,8 @@ fn main() {
                 }
             },
 
-            Some(Commands::Images(i)) => {
-                match i.run() {
+            Some(Commands::Dir(d)) => {
+                match d.run() {
                     Ok(_) => {},
                     Err(err) => {
                         println!("Error: Found error: {}\n", err);
@@ -84,8 +84,8 @@ fn main() {
                 }
             },
 
-            Some(Commands::Player(p)) => {
-                match p.run() {
+            Some(Commands::Images(i)) => {
+                match i.run() {
                     Ok(_) => {},
                     Err(err) => {
                         println!("Error: Found error: {}\n", err);

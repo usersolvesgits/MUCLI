@@ -40,6 +40,9 @@ pub enum MiscCommandsOptions {
         #[arg(short, long)]
         complete: bool,
     },
+    PasswordGenerator {
+        //TODO
+    },
     Credits {
         /// Tries to open the creators GitHub page in the default browser.
         #[arg(short, long)]
@@ -92,6 +95,10 @@ impl CommandsActions for MiscCommands {
                     }
                 }
 
+                Ok(())
+            },
+            MiscCommandsOptions::PasswordGenerator {  } => {
+                //TODO
                 Ok(())
             },
             MiscCommandsOptions::Credits { open_link } => {

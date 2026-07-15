@@ -85,7 +85,10 @@ impl CommandsActions for FileCommands {
                 if overwrite.clone() {
                     fs::write(&paste_path, file_contents)?;
                 } else {
-                    let mut file = fs::OpenOptions::new().write(true).append(true).open(&copy_path)?;
+                    let mut file = fs::OpenOptions::new()
+                        .write(true)
+                        .append(true)
+                        .open(&copy_path)?;
                     file.write_all(file_contents.as_bytes())?;
                 }
                 Ok(println!("File contents copied successfully on file '{:?}'!", paste_path))

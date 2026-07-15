@@ -16,12 +16,6 @@ pub enum ConnectionCommandsOptions {
     Ping {
         remote_host: String,
     },
-    /// Sends a `GET` request to a remote api url, with optional field to store the result of the request in a text file.
-    GetRequest {
-        api_url: String,
-        api_key: Option<String>,
-        save_file: Option<PathBuf>,
-    }
 }
 
 impl CommandsActions for ConnectionCommands {
@@ -31,9 +25,6 @@ impl CommandsActions for ConnectionCommands {
             ConnectionCommandsOptions::Ping { remote_host } => {
                 Ok(())
             },
-            ConnectionCommandsOptions::GetRequest { api_url, api_key, save_file } => {
-                Ok(())
-            }
         }
     }
 }

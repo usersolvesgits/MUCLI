@@ -1,15 +1,15 @@
 use crate::cli_commands::{
     file,
+    directory,
     images,
-    player,
     system,
     connection,
     misc
 };
 
 use file::FileCommands;
+use directory::DirectoryCommands;
 use images::ImagesCommands;
-use player::PlayerCommands;
 use system::SystemCommands;
 use connection::ConnectionCommands;
 use misc::MiscCommands;
@@ -34,10 +34,10 @@ pub enum Commands {
 
     /// Handles file related tasks.
     File(FileCommands),
+    /// Handles directories related tasks
+    Dir(DirectoryCommands),
     /// Handles images related tasks
     Images(ImagesCommands),
-    /// Handles music related tasks
-    Player(PlayerCommands),
 
     /// Handles system related tasks.
     System(SystemCommands),
