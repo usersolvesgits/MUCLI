@@ -73,7 +73,11 @@ impl CommandsActions for FileCommands {
                     fs::write(path, String::new())?;
                     fs::write(path, message)?;
                 } else {
-                    fs::write(path, message)?;
+                    let mut file = fs::OpenOptions::new()
+                                        .write(true)
+                                        .append(true)
+                                        .open(path)?;
+                    file.write_all(message.as_bytes())?;
                 }
                 Ok(println!("Writing successful on file '{:?}'", path))
             },

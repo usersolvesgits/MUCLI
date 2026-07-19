@@ -2,7 +2,6 @@ use crate::models::commands_traits::CommandsActions;
 
 use clap::{Args, Subcommand};
 use anyhow::Error;
-use std::path::PathBuf;
 
 #[derive(Args, Debug)]
 pub struct ConnectionCommands {

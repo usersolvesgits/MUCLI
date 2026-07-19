@@ -35,13 +35,14 @@ pub enum MiscCommandsOptions {
         /// Prints out in the terminal the hourly estimate of the precipitation levels (tries also to predict future precipitation levels).
         #[arg(short, long)]
         precipitation: bool,
-
-        /// Prints out in the terminal every important value to know (elevation, hourly temperatures, precipitations, etc.).
-        #[arg(short, long)]
-        complete: bool,
     },
     PasswordGenerator {
         //TODO
+        // 2 Vec<chars> (a..z), (A..Z);
+        // 1 Vec<chars> (!..?)
+        // 1 Vec<chars> (0..9)
+        // use rand crate to randomly select N numbers of elements.
+        // numero_caratteri; -special_chars (include or not special chars in the password)
     },
     Credits {
         /// Tries to open the creators GitHub page in the default browser.
@@ -54,44 +55,39 @@ impl CommandsActions for MiscCommands {
     fn run(&self) -> Result<(), Error> {
         match &self.command {
             MiscCommandsOptions::Weather { longitude, latitude,
-                lat, long, elevation, temperature, precipitation, complete} => {
+                lat, long, elevation, temperature, precipitation} => {
 
                 let api_serialized_output: APIResponse = get_api_response(longitude, latitude)?;
 
-                if !complete && !lat && !long && !elevation && !temperature && !precipitation {
-                    println!("ATTENTION: Enter at least one of the given flags.\n\
-                              To see all of the available flags and their explanations, enter 'misc weather --help'.");
-                    return Ok(())
-                }
-
-                if complete.clone() {
+                if !lat && !long && !elevation &&
+                   !temperature && !precipitation {
                     println!("[latitude: {}], [longitude: {}]", api_serialized_output.latitude, api_serialized_output.longitude);
                     println!("[elevation: {}]", api_serialized_output.elevation);
                     for i in 0..api_serialized_output.hourly.time.len() {
                         println!("[time: {}], [temp: {}], [precipitation: {}]",
                                  api_serialized_output.hourly.time[i] ,api_serialized_output.hourly.temperature_2m[i], api_serialized_output.hourly.precipitation[i]);
                     }
-                } else {
-                    if lat.clone() {
-                        println!("[latitude: {}]", api_serialized_output.latitude);
+                }
+
+                if lat.clone() {
+                    println!("[latitude: {}]", api_serialized_output.latitude);
+                }
+                if long.clone() {
+                    println!("[longitude: {}]", api_serialized_output.longitude);
+                }
+                if elevation.clone() {
+                    println!("[elevation: {}", api_serialized_output.elevation);
+                }
+                if temperature.clone() {
+                    for i in 0..api_serialized_output.hourly.time.len() {
+                        println!("[time: {}], [temp: {}]",
+                                 api_serialized_output.hourly.time[i] ,api_serialized_output.hourly.temperature_2m[i]);
                     }
-                    if long.clone() {
-                        println!("[longitude: {}]", api_serialized_output.longitude);
-                    }
-                    if elevation.clone() {
-                        println!("[elevation: {}", api_serialized_output.elevation);
-                    }
-                    if temperature.clone() {
-                        for i in 0..api_serialized_output.hourly.time.len() {
-                            println!("[time: {}], [temp: {}]",
-                                     api_serialized_output.hourly.time[i] ,api_serialized_output.hourly.temperature_2m[i]);
-                        }
-                    }
-                    if precipitation.clone() {
-                        for i in 0..api_serialized_output.hourly.time.len() {
-                            println!("[time: {}], [precipitation: {}]",
-                                     api_serialized_output.hourly.time[i] ,api_serialized_output.hourly.precipitation[i]);
-                        }
+                }
+                if precipitation.clone() {
+                    for i in 0..api_serialized_output.hourly.time.len() {
+                        println!("[time: {}], [precipitation: {}]",
+                                 api_serialized_output.hourly.time[i] ,api_serialized_output.hourly.precipitation[i]);
                     }
                 }
 

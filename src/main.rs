@@ -5,6 +5,7 @@ pub mod api;
 
 use cli::*;
 use models::commands_traits::CommandsActions;
+
 use std::io::{self, Write};
 use clap::Parser;
 
@@ -50,7 +51,7 @@ fn main() {
                         eprintln!("ERROR: Error found during parsing the arguments!\n{}\n", err);
                     }
                 }
-                continue;
+                continue
             },
         };
 
